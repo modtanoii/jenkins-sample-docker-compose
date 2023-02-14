@@ -1,14 +1,11 @@
 pipeline {
-    agent any
+    agent {
+        docker { image 'prom/blackbox-exporter' }
+    }
     stages {
-        stage ("verfy tooling") {
+        stage ('test') {
             steps {
-                sh '''
-                    docker version
-                    docker info
-                    docker compose version
-                    curl --version
-                '''
+                sh 'uname -a'
             }
         }
     }
