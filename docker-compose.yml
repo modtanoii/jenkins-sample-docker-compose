@@ -9,7 +9,7 @@ services:
     container_name: test_prom
     restart: unless-stopped
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prom_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
