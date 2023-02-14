@@ -9,7 +9,7 @@ pipeline {
         }
         stage('test access') {
             steps {
-                sh 'curl http://localhost:9099'
+                sh 'curl http://test_prom:9090'
             }
         }
     }
