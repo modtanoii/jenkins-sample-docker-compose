@@ -1,0 +1,77 @@
+global:
+  scrape_interval: 1m
+
+scrape_configs:
+  - job_name: "prometheus"
+    scrape_interval: 5s
+    static_configs:
+    - targets: ["localhost:9090"]
+
+  - job_name: "grafana"
+    static_configs:
+    - targets: ["grafana:3000"]
+
+  - job_name: 'blackbox-hostmonitor'
+    scrape_interval: 30s                                                                                                                                                                      
+    metrics_path: /probe                                                                                                                                                                      
+    params:                                                                                                                                                                                   
+      module: [icmp]
+    static_configs:                                                                                                                                                                           
+    - targets: ['172.28.10.10', '172.28.10.11', '172.28.10.12', '172.28.10.13', '172.28.10.14', '172.28.10.20', '172.28.10.21', '172.28.10.30', '172.28.10.31', '172.28.10.40', '172.28.10.50', '172.28.10.60', '172.28.10.70', '172.28.10.2', '172.28.10.3', '172.28.10.4', '172.28.10.5']                                                                                                                                                            
+      labels:                                                                                                                                                                               
+        group: 'S4 Production'                                                                                                                                                                   
+    - targets: ['172.28.12.10', '172.28.11.11', '172.28.12.11', '172.28.12.20', '172.28.11.21', '172.28.12.21', '172.28.11.31', '172.28.12.31', '172.28.11.40', '172.28.12.40', '172.28.11.50', '172.28.12.50', '172.28.12.60', '172.28.12.70']                                          
+      labels:                                                                                                                                                                               
+        group: 'S4 Non Production' 
+    - targets: ['172.28.20.10', '172.28.20.11', '172.28.20.21', '172.28.20.31', '172.28.20.41', '172.28.21.10']                                          
+      labels:                                                                                                                                                                               
+        group: 'Opentext ECM' 
+    relabel_configs:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__param_target]
+      target_label: instance
+    - target_label: __address__
+      replacement: blackbox-exporter:9115
+
+  - job_name: 'blackbox-webservicemonitor'
+    scrape_interval: 1m                                                                                                                                                                      
+    metrics_path: /probe    
+    params:                                                                                                                                                                                   
+      module: [http_2xx]
+    static_configs:
+        - targets:
+            - https://s4-dev.toagroup.com:44300/sap/bc/ui2/flp
+            - https://s4-qas.toagroup.com:44300/sap/bc/ui2/flp
+            - https://s4.toagroup.com:44300/sap/bc/ui2/flp
+            - https://bw4-dev.toagroup.com:44300/sap/bc/ui2/flp
+            - https://bw4-qas.toagroup.com:44300/sap/bc/ui2/flp
+            - https://bw4.toagroup.com:44300/sap/bc/ui2/flp                   
+            - http://sapbidev.toagroup.com:8080/BOE/BI
+            - http://sapbiqas.toagroup.com:8080/BOE/BI
+            - http://sapbiprd.toagroup.com:8080/BOE/BI
+            - http://sappodev.toagroup.com:50000
+            - http://sappoqas.toagroup.com:50000
+            - http://sappoprd.toagroup.com:50000
+            - https://ecmcsp01.toagroup.com:8443/otdsws/login
+            - http://sapdsdev.toagroup.com:8080/DataServices/launch/logon.action
+            - http://sapdsqas.toagroup.com:8080/DataServices/launch/logon.action
+            - http://sapdsprd.toagroup.com:8080/DataServices/launch/logon.action
+
+    relabel_configs:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__param_target]
+      target_label: instance
+    - target_label: __address__
+      replacement: blackbox-exporter:9115
+
+  - job_name: 'win-exporter'
+    scrape_interval: 1m
+    static_configs:
+      - targets: ['172.28.12.40:9182']
+      - targets: ['172.28.11.40:9182']
+      - targets: ['172.28.10.40:9182']
+      - targets: ['172.28.12.50:9182']
+      - targets: ['172.28.11.50:9182']
+      - targets: ['172.28.10.50:9182']
