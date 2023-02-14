@@ -3,6 +3,7 @@ version: '3.8'
 volumes:
   prom_data: {}
 
+services:
   prometheus:
     image: prom/prometheus:latest
     container_name: test_prom
