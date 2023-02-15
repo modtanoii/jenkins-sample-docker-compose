@@ -18,4 +18,4 @@ services:
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--web.enable-lifecycle'
     ports:
-      - 9090:9099
+      - 9090:9090
